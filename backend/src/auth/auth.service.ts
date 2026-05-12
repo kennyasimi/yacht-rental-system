@@ -58,7 +58,7 @@ export class AuthService {
 
     // Find the user
     const user = await this.prisma.users.findUnique({
-      where: { email },
+      where: { email: loginDto.email },
     });
 
     if (!user) {
@@ -72,7 +72,7 @@ export class AuthService {
     }
 
     // Generate JWT token
-    const payload = { sub: user.user_id, email: user.email };
+    const payload = { sub: user.user_id, email: user.email, role: user.role };
     const access_token = this.jwtService.sign(payload);
 
     // Return response
@@ -87,12 +87,12 @@ export class AuthService {
   }
 
   async validateUser(userId: number) {
-    const user = await this.prisma.users.findUnique({
+    const user = await this.prisma.users.findUniqueOrThrow({
       where: { user_id: userId },
       select: {
         user_id: true,
         email: true,
-        name: true,
+        first_name: true,
       },
     });
     return user;
