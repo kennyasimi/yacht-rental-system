@@ -5,6 +5,7 @@ import { CreateBoatDto } from './dto/createboat.dto';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { RolesGuard } from '../auth/roles.guard';
 import { Roles } from '../auth/roles.decorator';
+import { UserRole } from 'src/auth/auth.enums';
 
 @Controller('boats')
 export class BoatsController {
@@ -26,7 +27,7 @@ export class BoatsController {
 
     //create new boat
     @UseGuards(JwtAuthGuard, RolesGuard)
-    @Roles('ADMIN')
+    @Roles(UserRole.ADMIN)
     @Post()
     addBoat( @Body() createBoatDto: CreateBoatDto){
         return this.boatsService.createBoat
@@ -35,7 +36,7 @@ export class BoatsController {
     
     //update boat details
     @UseGuards(JwtAuthGuard, RolesGuard)
-    @Roles('ADMIN')
+    @Roles(UserRole.ADMIN)
     @Patch(':id') 
     async extractBoatId(
             @Param('id', ParseIntPipe) id: number, //  Captures the ID from the URL path
@@ -47,7 +48,7 @@ export class BoatsController {
     }
 
     @UseGuards(JwtAuthGuard, RolesGuard)
-    @Roles('ADMIN')
+    @Roles(UserRole.ADMIN)
     @Delete(':id')
     async deleteBoat (@Param('id', ParseIntPipe) id: number,) {
         return this.boatsService.deleteBoat(id)
