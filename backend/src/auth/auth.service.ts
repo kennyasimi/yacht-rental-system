@@ -4,6 +4,7 @@ import * as bcrypt from 'bcrypt';
 import { PrismaService } from '../prisma/prisma.service';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
+import { UserRole } from './auth.enums';
 
 @Injectable()
 export class AuthService {
@@ -35,8 +36,10 @@ export class AuthService {
         first_name: first_name || null,
         last_name: last_name || null,
         phone: phone || null,
+        role: UserRole.USER,
       },
     });
+
 
     // Generate JWT token
     const payload = { sub: user.user_id, email: user.email };
@@ -52,6 +55,17 @@ export class AuthService {
       },
     };
   }
+
+  //  async createAdmin(createAdminDto: CreateAdminDto) {
+  //       // Only existing admins can call this
+  //       return this.prisma.users.create({
+  //           data: {
+  //               email: createAdminDto.email,
+  //               password: hashed_password,
+  //               role: UserRole.ADMIN,  // ← Assign ADMIN role
+  //           },
+  //       });
+  //   }
 
   async login(loginDto: LoginDto) {
     const { email, password } = loginDto;
