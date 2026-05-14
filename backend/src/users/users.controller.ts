@@ -13,7 +13,7 @@ import { UsersService } from './users.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { RolesGuard } from '../auth/roles.guard';
 import { Roles } from '../auth/roles.decorator';
-
+import { UserRole } from 'src/auth/auth.enums';
 import { UpdateUserDto } from './dto/updateuser.dto';
 import { DeleteUserDto } from './dto/deleteuser.dto';
 import { ChangePasswordDto } from './dto/changepassword.dto';
@@ -65,7 +65,7 @@ export class UsersController {
   }
 
   // ADMIN VIEW ALL USERS
-  @Roles('ADMIN')
+  @Roles(UserRole.ADMIN)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Get()
   getAllUsers() {
