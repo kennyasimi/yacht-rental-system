@@ -13,8 +13,6 @@ model boats {
   boat_type     String?    @db.VarChar
   capacity      Int?
   price_per_day Int?
-  location_id   Int?       @default(autoincrement())
-  locations     locations? @relation(fields: [location_id], references: [location_id], onDelete: NoAction, onUpdate: NoAction, map: "location_id")
   bookings      bookings[]
   reviews       reviews[]
 }
@@ -39,7 +37,6 @@ model locations {
   city          String? @db.VarChar
   country       String? @db.VarChar
   address       String?
-  boats         boats[]
 }
 
 model payments {
