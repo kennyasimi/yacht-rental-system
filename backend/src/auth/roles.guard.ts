@@ -6,13 +6,14 @@ import {
 } from '@nestjs/common';
 
 import { Reflector } from '@nestjs/core';
+import { UserRole } from './auth.enums';
 
 @Injectable()
 export class RolesGuard implements CanActivate {
   constructor(private reflector: Reflector) {}
 
   canActivate(context: ExecutionContext): boolean {
-    const requiredRoles = this.reflector.get<string[]>(
+    const requiredRoles = this.reflector.get<UserRole[]>(
       'roles',
       context.getHandler(),
     );
@@ -29,7 +30,11 @@ export class RolesGuard implements CanActivate {
       throw new ForbiddenException('User not authenticated');
     }
 
-    if (!requiredRoles.includes(user.role)) {
+    const hasRequiredRole = requiredRoles.some(
+      (role) => user.role === role
+      );
+
+    if (!hasRequiredRole) {
       throw new ForbiddenException('Access denied');
     }
 
