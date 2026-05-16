@@ -45,7 +45,7 @@ export class BookingsController {
     @Roles(UserRole.ADMIN)
     @UseGuards(JwtAuthGuard, RolesGuard)
     @Get()
-    getAllUsers(
+    getAllBookings(
         ) {
         return this.bookingsService.getAllBookings();
     }
