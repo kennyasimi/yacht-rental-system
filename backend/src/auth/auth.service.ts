@@ -101,6 +101,7 @@ export class AuthService {
     };
   }
 
+  
   async validateUser(userId: number) {
     const user = await this.prisma.users.findUniqueOrThrow({
       where: { user_id: userId },
