@@ -1,7 +1,8 @@
 import { Injectable, NotFoundException, BadRequestException} from '@nestjs/common';
 import { PerformanceNodeTiming } from 'perf_hooks';
-import { BookingsService, BookingStatus } from 'src/bookings/bookings.service';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { BookingsService, BookingStatus } from '../bookings/bookings.service';
+import { PrismaService } from '../prisma/prisma.service';
+import { ConfigService } from '@nestjs/config';
 import  Stripe   from 'stripe';
 
 
@@ -13,8 +14,10 @@ export class paymentsService {
 
     constructor(
         private prisma: PrismaService,
-        private bookingsService: BookingsService,) {
-        this.stripe = new Stripe(process.env.STRIPE_SECRET_KEY!,{
+        private configService: ConfigService ) {
+          const apiKey = this.configService.get('STRIPE_SECRET_KEY');
+
+        this.stripe = new Stripe(apiKey,{
             apiVersion: '2026-04-22.dahlia',
         });
     }
