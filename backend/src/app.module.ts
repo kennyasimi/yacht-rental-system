@@ -8,9 +8,15 @@ import { PrismaService } from './prisma/prisma.service';
 import { BoatsModule } from './boats/boats.module';
 import { BookingsModule } from './bookings/bookings.module';
 import { PaymentsModule } from './payments/payments.module';
+import { ReviewsModule } from './reviews/reviews.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
-  imports: [UsersModule, AuthModule, PrismaModule, BoatsModule, BookingsModule, PaymentsModule],
+  imports: [UsersModule, AuthModule, PrismaModule, BoatsModule, BookingsModule, PaymentsModule, ReviewsModule, 
+    ConfigModule.forRoot({
+      isGlobal: true,  // make ConfigService available everywhere
+      envFilePath: '.env',  // Explicitly specify .env file path
+    }),],
   controllers: [AppController],
   providers: [AppService, PrismaService],
 })
