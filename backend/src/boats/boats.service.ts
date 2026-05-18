@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { CreateBoatDto } from './dto/createboat.dto';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from '../prisma/prisma.service';
 import { UpdateBoatDto } from './dto/updateboat.dto';
 //import { DeleteBoatDto } from './dto/deleteboat.dto';
 import * as bcrypt from 'bcrypt';
-import { BoatsScalarFieldEnum } from 'src/generated/internal/prismaNamespace';
+import { BoatsScalarFieldEnum } from '../generated/internal/prismaNamespace';
 import { identity } from 'rxjs';
 import { NotFoundException } from '@nestjs/common';
 

@@ -1,5 +1,5 @@
 import { Injectable, ConflictException, BadRequestException, NotFoundException } from '@nestjs/common';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from '../prisma/prisma.service';
 import { CreateBookingDto } from './dto/createbooking.dto';
 
 export enum BookingStatus {

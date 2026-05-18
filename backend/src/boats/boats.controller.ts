@@ -2,10 +2,10 @@ import { Controller, Patch, Param, Body,ParseIntPipe, UseGuards, Get, Post, Dele
 import { boatsService } from './boats.service';
 import { UpdateBoatDto } from './dto/updateboat.dto';
 import { CreateBoatDto } from './dto/createboat.dto';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { RolesGuard } from '../auth/roles.guard';
 import { Roles } from '../auth/roles.decorator';
-import { UserRole } from 'src/auth/auth.enums';
+import { UserRole } from '../auth/auth.enums';
 
 @Controller('boats')
 export class BoatsController {

@@ -1,10 +1,10 @@
 import { Controller, UseGuards, Body, Get, Post, Request,Param, ParseIntPipe } from '@nestjs/common';
-import { Roles } from 'src/auth/roles.decorator';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { Roles } from '../auth/roles.decorator';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { PaymentDto } from './dto/payments.dto';
 import { paymentsService } from './payments.service';
-import { UserRole } from 'src/auth/auth.enums';
-import { RolesGuard } from 'src/auth/roles.guard';
+import { UserRole } from '../auth/auth.enums';
+import { RolesGuard } from '../auth/roles.guard';
 @Controller('payments')
 export class PaymentsController {
     constructor(private readonly paymentsService: paymentsService){}
