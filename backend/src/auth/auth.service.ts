@@ -32,7 +32,7 @@ export class AuthService {
     const user = await this.prisma.users.create({
       data: {
         email,
-        password_hash: password,
+        password_hash: hashedPassword, //major error , stored plain text password instead of hashed password
         first_name: first_name || null,
         last_name: last_name || null,
         phone: phone || null,
