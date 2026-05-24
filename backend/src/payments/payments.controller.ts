@@ -21,18 +21,18 @@ export class PaymentsController {
         dto.payment_method,
     )}
 
-     @UseGuards(JwtAuthGuard)
-  @Get('me/booking/:bookingId')
-  getMyBookingPayments(
-    @Request() req,
-    @Param('bookingId', ParseIntPipe)
-    bookingId: number,
-  ) {
+    @UseGuards(JwtAuthGuard)
+    @Get('me/booking/:bookingId')
+    getMyBookingPayments(
+      @Request() req,
+      @Param('bookingId', ParseIntPipe)
+      bookingId: number,
+    ) {
 
-    return this.paymentsService.getPaymentByBookingId(
-      bookingId,
-    );
-  }
+      return this.paymentsService.getPaymentByBookingId(
+        bookingId,
+      );
+    }
 
     @Roles(UserRole.ADMIN)
     @UseGuards(JwtAuthGuard, RolesGuard)
