@@ -35,6 +35,13 @@ export class BookingsService {
         })
     }
 
+    async getUsersBookings(userId: number) {
+        return this.prisma.bookings.findMany({
+            where: {user_id: userId
+            }
+        })
+    }
+
     async getAllBookings(){
         return this.prisma.bookings.findMany()
     }
@@ -110,4 +117,71 @@ export class BookingsService {
       booking: updatedBooking,
     };
   }
+
+  async getBoatAvailability(boatId: number, month?: number, year?: number) {
+    // Default to current month if not specified
+    const currentDate = new Date();
+    const targetMonth = month ?? currentDate.getMonth() + 1;
+    const targetYear = year ?? currentDate.getFullYear();
+    
+    // Get start and end of the month
+    const startOfMonth = new Date(targetYear, targetMonth - 1, 1);
+    const endOfMonth = new Date(targetYear, targetMonth, 0);
+    
+    // Get all bookings for this boat in the month
+    const bookings = await this.prisma.bookings.findMany({
+        where: {
+            boat_id: boatId,
+            status: { not: 'CANCELLED' },
+            OR: [
+                {
+                    start_date: { lte: endOfMonth },
+                    end_date: { gte: startOfMonth }
+                }
+            ]
+        }
+    });
+    
+    // Generate array of booked dates
+    const bookedDates: string[] = [];
+    
+    bookings.forEach(booking => {
+        const start = new Date(booking.start_date!);
+        const end = new Date(booking.end_date!);
+        
+        // Adjust to month boundaries
+        const loopStart = start < startOfMonth ? startOfMonth : start;
+        const loopEnd = end > endOfMonth ? endOfMonth : end;
+        
+        for (let d = new Date(loopStart); d <= loopEnd; d.setDate(d.getDate() + 1)) {
+            bookedDates.push(d.toISOString().split('T')[0]);
+        }
+    });
+    
+    // Get unique dates
+    const uniqueBookedDates = [...new Set(bookedDates)];
+    
+    return {
+        boatId,
+        year: targetYear,
+        month: targetMonth,
+        bookedDates: uniqueBookedDates,
+        availableDates: this.getAvailableDates(targetYear, targetMonth, uniqueBookedDates)
+    };
+}
+
+private getAvailableDates(year: number, month: number, bookedDates: string[]): string[] {
+    const startDate = new Date(year, month - 1, 1);
+    const endDate = new Date(year, month, 0);
+    const availableDates: string[] = [];
+    
+    for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
+        const dateString = d.toISOString().split('T')[0];
+        if (!bookedDates.includes(dateString)) {
+            availableDates.push(dateString);
+        }
+    }
+    
+    return availableDates;
+}
 }

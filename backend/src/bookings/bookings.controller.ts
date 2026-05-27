@@ -1,4 +1,4 @@
-import { Controller, Request, Body, UseGuards, Post, Patch, Param, ParseIntPipe, Get } from '@nestjs/common';
+import { Controller, Request, Body, UseGuards, Post, Patch, Param, ParseIntPipe, Get,  Query } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { BookingsService } from './bookings.service';
 import { CreateBookingDto } from './dto/createbooking.dto';
@@ -42,12 +42,31 @@ export class BookingsController {
             return this.bookingsService.getBookingById(userId, bookingId)
     }
 
+    @UseGuards(JwtAuthGuard)
+    @Get('/all')
+    getUsersBookings(
+        @Param('id', ParseIntPipe)
+        @Request() req: any,
+        ){
+            const userId = req.user.id;
+            return this.bookingsService.getUsersBookings(userId)
+    }
+
     @Roles(UserRole.ADMIN)
     @UseGuards(JwtAuthGuard, RolesGuard)
     @Get()
     getAllBookings(
         ) {
         return this.bookingsService.getAllBookings();
+    }
+
+     @Get('boat/:boatId/availability')
+    async getBoatAvailability(
+        @Param('boatId', ParseIntPipe) boatId: number,
+        @Query('month') month?: number,
+        @Query('year') year?: number,
+    ) {
+        return this.bookingsService.getBoatAvailability(boatId, month, year);
     }
 
 }
