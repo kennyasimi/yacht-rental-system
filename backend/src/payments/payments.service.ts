@@ -14,7 +14,7 @@ export class paymentsService {
         private configService: ConfigService ) {
     }
 
-   async processPayment(
+  async processPayment(
   bookingId: number,
   userId: number,
   paymentMethod: string,
