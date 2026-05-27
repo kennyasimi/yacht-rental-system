@@ -27,7 +27,7 @@ export class AuthService {
 
     // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
-
+   
     // Create the user
     const user = await this.prisma.users.create({
       data: {
@@ -37,6 +37,7 @@ export class AuthService {
         last_name: last_name || null,
         phone: phone || null,
         role: UserRole.USER,
+        created_at: new Date(),
       },
     });
 
