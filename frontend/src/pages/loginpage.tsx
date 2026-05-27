@@ -1,10 +1,13 @@
 import { useState } from 'react';
 import { loginUser } from '../services/authservice';
+import { useNavigate } from 'react-router-dom';
 
 function LoginPage() {
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const navigate = useNavigate();
+
 
   const handleSubmit = async (
   e: React.SubmitEvent
@@ -26,7 +29,8 @@ function LoginPage() {
         localStorage.setItem('user', JSON.stringify(data.user));
         
 
-      alert('Login successful');
+      //alert('Login successful');
+      if (data) {navigate("/", { replace: true})}
 
 
         console.log(data);
