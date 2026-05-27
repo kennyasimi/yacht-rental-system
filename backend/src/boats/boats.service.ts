@@ -7,6 +7,9 @@ import * as bcrypt from 'bcrypt';
 import { BoatsScalarFieldEnum } from '../generated/internal/prismaNamespace';
 import { identity } from 'rxjs';
 import { NotFoundException } from '@nestjs/common';
+import * as fs from 'fs';
+import * as path from 'path';
+import 'multer';
 
 @Injectable()
 export class boatsService {
@@ -15,22 +18,67 @@ export class boatsService {
         
     ){}
 
+    //method to get image path for a boat
+     private getImagePath(boatId: number): string | null {
+        const uploadDir = './uploads/boats';
+        const extensions = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+        
+        for (const ext of extensions) {
+            const imagePath = path.join(uploadDir, `boat-${boatId}.${ext}`);
+            if (fs.existsSync(imagePath)) {
+                return imagePath;
+            }
+        }
+        return null;
+    }
+
+    
+    
+    //method to get image URL for a boat
+     private getImageUrl(boatId: number): string | null {
+        const imagePath = this.getImagePath(boatId);
+        if (imagePath) {
+            // Extract just the filename from the path
+            const filename = path.basename(imagePath);
+            return `/uploads/boats/${filename}`;
+        }
+        return null;
+    }
+
+    // Helper method to delete boat image
+    private deleteBoatImage(boatId: number): void {
+        const imagePath = this.getImagePath(boatId);
+        if (imagePath && fs.existsSync(imagePath)) {
+            fs.unlinkSync(imagePath);
+        }
+    }
+
+
     async getBoatById(boatId: number) {
-        return this.prisma.boats.findUnique({
+        const boat = await this.prisma.boats.findUnique({
             where: { boat_id: boatId },
         });
+
+        return {
+            ...boat,
+            imageURl: this.getImageUrl(boatId)
+        }
     }
 
     async getAllBoats() {
-        return this.prisma.boats.findMany()
-
+        const boats = await this.prisma.boats.findMany()
+        
+        return boats.map(boat => ({
+            ...boat,
+            imageUrl: this.getImageUrl(boat.boat_id)
+        }));
     }
     
 
-    async createBoat(createBoatDto: CreateBoatDto) {
+    async createBoat(createBoatDto: CreateBoatDto, imageFile: Express.Multer.File) {
         const { boat_name, boat_type, capacity, price_per_day } = createBoatDto;
 
-        return await this.prisma.boats.create({
+        const newBoat = await this.prisma.boats.create({
             data: {
                 boat_name,
                 boat_type,
@@ -39,9 +87,22 @@ export class boatsService {
             },
 
         });
+        if (imageFile && imageFile.path) {
+            const oldPath = imageFile.path;
+            const ext = path.extname(imageFile.originalname);
+            const newPath = path.join('./uploads/boats', `boat-${newBoat.boat_id}${ext}`);
+        
+        if (fs.existsSync(oldPath)) {
+                fs.renameSync(oldPath, newPath);
+            }
+        }
+         return {
+            ...newBoat,
+            imageUrl: this.getImageUrl(newBoat.boat_id)
+        };
     }
 
-    async updateBoat(id: number, updateBoatDto: UpdateBoatDto) {
+    async updateBoat(id: number, updateBoatDto: UpdateBoatDto, imageFile?: Express.Multer.File) {
         const boatUpdateData: Partial<{
             boat_name: string;
             boat_type: string;
@@ -56,10 +117,23 @@ export class boatsService {
         if (updateBoatDto.new_boat_type !== undefined) boatUpdateData.boat_type = updateBoatDto.new_boat_type;
         if (updateBoatDto.new_price_per_day !== undefined) boatUpdateData.price_per_day = updateBoatDto.new_price_per_day;
 
-        return this.prisma.boats.update({
+        const updatedBoat = await this.prisma.boats.update({
             where: { boat_id: id },
             data: boatUpdateData
         })
+
+        if (imageFile) {
+            // Delete old image if it exists
+            this.deleteBoatImage(id);
+            
+            // Save new image with correct naming
+            const ext = path.extname(imageFile.originalname);
+            const newPath = path.join('./uploads/boats', `boat-${id}${ext}`);
+            
+            if (fs.existsSync(imageFile.path)) {
+                fs.renameSync(imageFile.path, newPath);
+            }
+    }
     }
 
     async deleteBoat(id: number){
@@ -68,6 +142,8 @@ export class boatsService {
         if (!boat) {
             throw new NotFoundException(`Boat with ID ${id} not found`);
                 }
+        this.deleteBoatImage(id);
+
         return this.prisma.boats.delete({
             where: {boat_id: id}
         })
