@@ -11,7 +11,7 @@ export class BookingsController {
     constructor (private bookingsService: BookingsService) {}
 
     @UseGuards(JwtAuthGuard)
-    @Post()
+    @Post('create')
     createBooking(
         @Request() req,
         @Body() createBookingDto: CreateBookingDto
@@ -43,7 +43,7 @@ export class BookingsController {
     }
 
     @UseGuards(JwtAuthGuard)
-    @Get('/all')
+    @Get('all')
     getUsersBookings(
         @Param('id', ParseIntPipe)
         @Request() req: any,
@@ -54,7 +54,7 @@ export class BookingsController {
 
     @Roles(UserRole.ADMIN)
     @UseGuards(JwtAuthGuard, RolesGuard)
-    @Get()
+    @Get('admin/all')
     getAllBookings(
         ) {
         return this.bookingsService.getAllBookings();

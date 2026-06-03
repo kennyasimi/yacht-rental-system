@@ -10,7 +10,7 @@ export class PaymentsController {
     constructor(private readonly paymentsService: paymentsService){}
 
     @UseGuards(JwtAuthGuard)
-    @Post('me/pay')
+    @Post('pay')
     payForBooking(
         @Request() req,
         @Body() dto: PaymentDto,
@@ -22,7 +22,7 @@ export class PaymentsController {
     )}
 
     @UseGuards(JwtAuthGuard)
-    @Get('me/booking/:bookingId')
+    @Get('booking/:bookingId')
     getMyBookingPayments(
       @Request() req,
       @Param('bookingId', ParseIntPipe)
