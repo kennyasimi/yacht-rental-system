@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { getBoatById } from '../services/boatsservice';
-import DateRangePicker from '../components/daterangepicker';
-import { type Boat } from '../types/boat';
-import { createBooking } from '../services/bookingservice';
+import { getBoatById } from '../../services/boatsservice';
+import DateRangePicker from '../../components/daterangepicker';
+import { type Boat } from '../../types/boat';
+import { createBooking } from '../../services/bookingservice';
 
 function BookingPage() {
     const { boatId } = useParams<{ boatId: string }>();

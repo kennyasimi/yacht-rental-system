@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { loginUser } from '../services/authservice';
-import { useNavigate } from 'react-router-dom';
+import { loginUser } from '../../services/authservice';
+import { Link, useNavigate } from 'react-router-dom';
 
 function LoginPage() {
 
@@ -28,9 +28,15 @@ function LoginPage() {
 
         localStorage.setItem('user', JSON.stringify(data.user));
         
-
+      const userStr = localStorage.getItem('user')
+      const user = userStr ? JSON.parse(userStr) : null;
+      const role = user?.role;
       //alert('Login successful');
-      if (data) {navigate("/", { replace: true})}
+      if (data && role == "ADMIN"){
+          navigate("/admin/boats", { replace: true})}
+        else{
+          navigate("/", {replace: true})
+        }
 
 
         console.log(data);
@@ -76,6 +82,8 @@ function LoginPage() {
         <button type="submit">
           Login
         </button>
+
+        <Link to= "/signup">create account</Link>
 
       </form>
 

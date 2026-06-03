@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { getAllUsers } from '../services/usersservices'
+import { getAllUsers } from '../../services/usersservices'
 
 
 function AllUsersPage() {

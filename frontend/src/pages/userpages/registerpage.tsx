@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { registerUser } from "../services/authservice";
+import { registerUser } from "../../services/authservice";
+import { useNavigate } from "react-router-dom";
 
 function RegisterPage() {
     //states for all the registration fields
@@ -7,6 +8,7 @@ function RegisterPage() {
     const [lastname, setLastName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const navigate = useNavigate();
 
     const handleSubmit = async (
   e: React.SubmitEvent
@@ -29,7 +31,8 @@ function RegisterPage() {
     );
 
     alert('Registration successful');
-
+    navigate('/')
+    
     console.log(data);
 
   } catch (error) {

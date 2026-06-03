@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { createBoat } from '../services/boatsservice';
+import { createBoat } from '../../services/boatsservice';
 
 function AddBoatPage() {
+    const token = localStorage.getItem('token')
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
     const [formData, setFormData] = useState({
@@ -51,7 +52,7 @@ function AddBoatPage() {
                 formDataToSend.append('image', selectedImage);
             }
             
-            await createBoat(formDataToSend);
+            await createBoat(formDataToSend, token || '');
             navigate('/admin/boats');
         } catch (error) {
             console.error('Error creating boat:', error);

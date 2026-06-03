@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import { getBookingById } from '../services/bookingservice';
-import { processPayment } from '../services/paymentservice';
+import { getBookingById } from '../../services/bookingservice';
+import { processPayment } from '../../services/paymentservice';
 function PaymentPage() {
     const { bookingId } = useParams<{ bookingId: string }>();
     const location = useLocation();

@@ -1,4 +1,4 @@
-import MainLayout from '../components/publiclayout';
+import MainLayout from '../../components/publiclayout';
 
 import { Link } from 'react-router-dom';
 

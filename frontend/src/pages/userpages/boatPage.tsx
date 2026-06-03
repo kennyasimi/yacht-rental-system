@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { getBoatById } from '../services/boatsservice';
-import { type Boat } from '../types/boat';
+import { getBoatById } from '../../services/boatsservice';
+import { type Boat } from '../../types/boat';
 
 function BoatDetailsPage() {
     const { id } = useParams<{ id: string }>();
