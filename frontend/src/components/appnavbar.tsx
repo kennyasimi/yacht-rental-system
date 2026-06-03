@@ -27,14 +27,9 @@ function AppNavbar() {
           Browse Boats
         </Link>
 
-        <Link to="/bookings">
-          Bookings
+        <Link to="/bookings/me">
+          My Bookings
         </Link>
-
-        <Link to="/payments">
-          Payments
-        </Link>
-
 
         <Link to="/profile">
           Profile

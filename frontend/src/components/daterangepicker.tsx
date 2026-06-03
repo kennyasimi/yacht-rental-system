@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { bookingService } from '../services/bookingservice';
+import { checkAvailability } from '../services/bookingservice';
 
 interface DateRangePickerProps {
     boatId: number;
@@ -23,7 +23,7 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({ boatId, onDateSelect,
     const fetchAvailability = async () => {
         setLoading(true);
         try {
-            const data = await bookingService.checkAvailability(
+            const data = await checkAvailability(
                 boatId,
                 currentMonth.getMonth() + 1,
                 currentMonth.getFullYear()
