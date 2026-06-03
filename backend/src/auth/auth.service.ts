@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException, ConflictException } from '@nestjs/common';
+import { Injectable, UnauthorizedException, ConflictException, ForbiddenException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { PrismaService } from '../prisma/prisma.service';
@@ -57,16 +57,39 @@ export class AuthService {
     };
   }
 
-  //  async createAdmin(createAdminDto: CreateAdminDto) {
-  //       // Only existing admins can call this
-  //       return this.prisma.users.create({
-  //           data: {
-  //               email: createAdminDto.email,
-  //               password: hashed_password,
-  //               role: UserRole.ADMIN,  // ← Assign ADMIN role
-  //           },
-  //       });
-  //   }
+
+
+ async createAdmin(createAdminDto: RegisterDto, currentUser: any) {
+    if (currentUser.role !== UserRole.ADMIN) {
+      throw new ForbiddenException('Only admins can create new admin accounts');
+    }
+    const existingUser = await this.prisma.users.findUnique({
+      where: { email: createAdminDto.email },
+    });
+
+    if (existingUser) {
+      throw new ConflictException('User with this email already exists');
+    }
+    const hashed_password = await bcrypt.hash(createAdminDto.password, 10);
+    return this.prisma.users.create({
+             data: {
+                first_name: createAdminDto.first_name,
+                last_name: createAdminDto.last_name,  
+                email: createAdminDto.email,
+                password: hashed_password,
+                role: UserRole.ADMIN,
+                created_at: new Date()
+             },
+      select: {
+        id: true,
+        email: true,
+        role: true,
+        name: true,
+        createdAt: true,
+        // Exclude password from response
+      },
+    });
+  }
 
   async login(loginDto: LoginDto) {
     const { email, password } = loginDto;
