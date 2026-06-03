@@ -1,5 +1,5 @@
 import axios from 'axios';
-import {  type CreateBookingDto, type BoatAvailability, type Booking, type  BookingWithDetails } from '../types/booking';
+import {  type CreateBookingDto } from '../types/booking';
 
 const API_URL = 'http://localhost:3000/bookings';
 
@@ -45,3 +45,10 @@ export const getUserBookings = async(token: string)  => {
         });
         return response.data;
     }
+
+export const getAllBookings = async(token: string) => {
+    const response = await axios.get( `${API_URL}/admin/all`,{
+        headers: {Authorization:`Bearer ${token}`}
+    });
+    return response.data;
+}

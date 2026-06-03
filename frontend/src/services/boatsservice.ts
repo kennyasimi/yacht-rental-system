@@ -13,24 +13,30 @@ export const getBoatById = async (id: number)  => {
     return response.data;
 }
 
-export const createBoat = async (formData: FormData): Promise<Boat> => {
+export const createBoat = async (formData: FormData, token: string): Promise<Boat> => {
     const response = await axios.post(API_URL, formData, {
         headers: {
             'Content-Type': 'multipart/form-data',
+            Authorization: `Bearer${token}`
         },
     });
     return response.data;
 };
 
-export const updateBoat = async (id: number, formData: FormData): Promise<Boat> => {
+export const updateBoat = async (id: number, formData: FormData, token: string): Promise<Boat> => {
     const response = await axios.patch(`${API_URL}/${id}`, formData, {
         headers: {
             'Content-Type': 'multipart/form-data',
+            Authorization: `Bearer${token}`
         },
     });
     return response.data;
 };
 
-export const deleteBoat = async (id: number): Promise<void> => {
-    await axios.delete(`${API_URL}/${id}`);
+export const deleteBoat = async (id: number, token: string): Promise<void> => {
+    await axios.delete(`${API_URL}/${id}`,{
+        headers: {
+            Authorization: `Bearer${token}`
+        }
+    });
 };

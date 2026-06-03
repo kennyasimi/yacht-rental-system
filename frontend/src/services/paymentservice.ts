@@ -29,8 +29,12 @@ export const getPaymentByBookingId = async(bookingId: number) => {
         return response.data;
     }
 
-export const getAllPayments = async() => {
-        const response = await axios.get(`${API_URL}`);
+export const getAllPayments = async(token: string) => {
+        const response = await axios.get(`${API_URL}`,
+            {
+                headers: {Authorization: `Bearer ${token}`}
+            }
+        );
         return response.data;
     }
 
