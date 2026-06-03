@@ -6,11 +6,10 @@ type Props = {
 
 function AdminRoute({ children }: Props) {
 
-  const token =
-    localStorage.getItem('token');
-
-  const role =
-    localStorage.getItem('role');
+  const token =localStorage.getItem('token');
+  const userStr = localStorage.getItem('user')
+  const user = userStr ? JSON.parse(userStr) : null;
+  const role = user?.role;
 
   if (!token) {
     return <Navigate to="/login" />;
