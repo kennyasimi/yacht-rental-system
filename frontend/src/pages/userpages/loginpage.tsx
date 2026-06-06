@@ -49,44 +49,46 @@ function LoginPage() {
   };
 
   return (
-    <div>
+    <div className="auth-page">
+        <div className="auth-container">
+            <div className="auth-card">
+                <h1 className="auth-title">Login</h1>
 
-      <h1>Login</h1>
+                <form onSubmit={handleSubmit} className="auth-form">
+                    <div className="form-group">
+                        <label className="form-label">Email</label>
+                        <input
+                            type="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            className="form-input"
+                            placeholder="Enter your email"
+                        />
+                    </div>
 
-      <form onSubmit={handleSubmit}>
+                    <div className="form-group">
+                        <label className="form-label">Password</label>
+                        <input
+                            type="password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            className="form-input"
+                            placeholder="Enter your password"
+                        />
+                    </div>
 
-        <div>
-          <label>Email</label>
+                    <button type="submit" className="btn btn-primary btn-block btn-lg">
+                        Login
+                    </button>
 
-          <input
-            type="email"
-            value={email}
-            onChange={(e) =>
-              setEmail(e.target.value)
-            }
-          />
+                    <div className="auth-link-container">
+                        <Link to="/signup" className="auth-link">
+                            Create account
+                        </Link>
+                    </div>
+                </form>
+            </div>
         </div>
-
-        <div>
-          <label>Password</label>
-
-          <input
-            type="password"
-            value={password}
-            onChange={(e) =>
-              setPassword(e.target.value)
-            }
-          />
-        </div>
-
-        <button type="submit">
-          Login
-        </button>
-
-        <Link to= "/signup">create account</Link>
-
-      </form>
-
     </div>
   );
 }

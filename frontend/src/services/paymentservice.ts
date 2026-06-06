@@ -3,7 +3,7 @@ import axios from 'axios';
 const API_URL = 'http://localhost:3000/payments';
 
 export interface ProcessPaymentDto {
-    bookingId: number;
+    booking_id: number;
     paymentMethod: string;
 }
 
@@ -17,7 +17,6 @@ export interface PaymentResult {
         payment_status: string;
         payment_method: string;
         payment_date: string;
-        error_message?: string;
     };
 }
 
@@ -40,7 +39,7 @@ export const getAllPayments = async(token: string) => {
 
 
  export const processPayment = async(dto: ProcessPaymentDto, token: string) => {
-        const response = await axios.post(`${API_URL}/me/pay`, dto, {
+        const response = await axios.post(`${API_URL}/pay`, dto, {
             headers: {Authorization: `Bearer ${token}`}
         });
         return response.data;

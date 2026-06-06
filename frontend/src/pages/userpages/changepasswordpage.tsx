@@ -30,59 +30,63 @@ function ChangePasswordPage () {
             }
         };
         return (
-        <div>
-            <h1>Change Password</h1>
+    <div className="auth-page">
+        <div className="auth-container">
+            <div className="auth-card">
+                <h1 className="auth-title">Change Password</h1>
 
-            <form onSubmit={handleSubmit}>
-                <div>
-                    <label>Old Password</label>
+                <form onSubmit={handleSubmit} className="auth-form">
+                    <div className="form-group">
+                        <label className="form-label">Old Password</label>
+                        <input
+                            type="password"
+                            value={oldpassword}
+                            onChange={(e) => setOldPassword(e.target.value)}
+                            className="form-input"
+                            placeholder="Enter your current password"
+                        />
+                    </div>
 
-                    <input
-                    type="password"
-                    value={oldpassword}
-                    onChange={(e) =>
-                    setOldPassword(e.target.value)
-                    }
-                    />
-                </div>
+                    <div className="form-group">
+                        <label className="form-label">New Password</label>
+                        <input
+                            type="password"
+                            value={newpassword}
+                            onChange={(e) => setNewPassword(e.target.value)}
+                            className="form-input"
+                            placeholder="Enter your new password"
+                        />
+                    </div>
 
-                <div>
-                    <label>New Password</label>
+                    <div className="form-group">
+                        <label className="form-label">Confirm Password</label>
+                        <input
+                            type="password"
+                            value={passwordconfirm}
+                            onChange={(e) => setPasswordConfirm(e.target.value)}
+                            className="form-input"
+                            placeholder="Confirm your new password"
+                        />
+                    </div>
 
-                    <input
-                        type="password"
-                        value={newpassword}
-                        onChange={(e) =>
-                        setNewPassword(e.target.value)
-                        }
-                    />
-                </div>
-
-                <div>
-                    <label>Confirm Password</label>
-
-                    <input
-                        type="password"
-                        value={passwordconfirm}
-                        onChange={(e) =>
-                        setPasswordConfirm(e.target.value)
-                        }
-                    />
-                </div>
-
-
-                <button type="submit">
-                    Change Password
-                </button>
-                
-                <button 
-                    type= "button"
-                    onClick={() =>{navigate('/profile')}}
-                >Cancel</button>
-            
-            </form>
+                    <div className="form-actions">
+                        <button type="submit" className="btn btn-primary">
+                            Change Password
+                        </button>
+                        
+                        <button 
+                            type="button"
+                            onClick={() => {navigate('/profile')}}
+                            className="btn btn-secondary"
+                        >
+                            Cancel
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
-    )
+    </div>
+);
     
 }
 

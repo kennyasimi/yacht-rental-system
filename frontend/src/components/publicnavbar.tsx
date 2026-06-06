@@ -4,30 +4,28 @@ function PublicNavbar() {
 
   return (
 
-    <nav>
+    <nav className="navbar">
+      <div className="navbar-container">
+        <h2 className="navbar-logo">Yacht Rental</h2>
 
-      <h2>Yacht Rental</h2>
+        <div className="nav-links">
+          <Link to="/" className="nav-link">
+            Home
+          </Link>
 
-      <div>
+          <Link to="/boats" className="nav-link">
+            Browse Boats
+          </Link>
 
-        <Link to="/">
-          Home
-        </Link>
+          <Link to="/login" className="nav-link">
+            Login
+          </Link>
 
-        <Link to="/boats">
-          Browse Boats
-        </Link>
-
-        <Link to="/login">
-          Login
-        </Link>
-
-        <Link to="/signup">
-          Sign Up
-        </Link>
-
+          <Link to="/signup" className="nav-link signup-link">
+            Sign Up
+          </Link>         
+        </div>
       </div>
-
     </nav>
   );
 }

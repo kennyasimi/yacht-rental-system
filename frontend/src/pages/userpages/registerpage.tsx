@@ -43,66 +43,70 @@ function RegisterPage() {
   }
 };
     return (
-        <div>
-            <h1>Register</h1>
+    <div className="auth-page">
+        <div className="auth-container">
+            <div className="auth-card">
+                <h1 className="auth-title">Register</h1>
 
-            <form onSubmit={handleSubmit}>
-                <div>
-                    <label>First Name</label>
+                <form onSubmit={handleSubmit} className="auth-form">
+                    <div className="form-group">
+                        <label className="form-label">First Name</label>
+                        <input
+                            type="text"
+                            value={firstname}
+                            onChange={(e) => setFirstName(e.target.value)}
+                            className="form-input"
+                            placeholder="Enter your first name"
+                        />
+                    </div>
 
-                    <input
-                    type="text"
-                    value={firstname}
-                    onChange={(e) =>
-                    setFirstName(e.target.value)
-                    }
-                    />
+                    <div className="form-group">
+                        <label className="form-label">Last Name</label>
+                        <input
+                            type="text"
+                            value={lastname}
+                            onChange={(e) => setLastName(e.target.value)}
+                            className="form-input"
+                            placeholder="Enter your last name"
+                        />
+                    </div>
+
+                    <div className="form-group">
+                        <label className="form-label">Email</label>
+                        <input
+                            type="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            className="form-input"
+                            placeholder="Enter your email"
+                        />
+                    </div>
+
+                    <div className="form-group">
+                        <label className="form-label">Password</label>
+                        <input
+                            type="password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            className="form-input"
+                            placeholder="Create a password"
+                        />
+                    </div>
+
+                    <button type="submit" className="btn btn-primary btn-block btn-lg">
+                        Register
+                    </button>
+                </form>
+
+                <div className="auth-footer">
+                    <p className="auth-footer-text">
+                        Already have an account? <a href="/login" className="auth-link">Login here</a>
+                    </p>
                 </div>
-
-                <div>
-                    <label>Last Name</label>
-
-                    <input
-                        type="text"
-                        value={lastname}
-                        onChange={(e) =>
-                        setLastName(e.target.value)
-                        }
-                    />
-                </div>
-
-                <div>
-                    <label>Email</label>
-
-                    <input
-                        type="email"
-                        value={email}
-                        onChange={(e) =>
-                        setEmail(e.target.value)
-                        }
-                    />
-                </div>
-
-                <div>
-                    <label>Password</label>
-
-                    <input
-                        type="password"
-                        value={password}
-                        onChange={(e) =>
-                        setPassword(e.target.value)
-                        }
-                    />
-                </div>
-
-                <button type="submit">
-                Register
-                </button>
-            </form>
+            </div>
         </div>
-
-        
-    );
+    </div>
+);
 }
 
 export default RegisterPage;

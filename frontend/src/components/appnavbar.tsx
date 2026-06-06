@@ -13,31 +13,31 @@ function AppNavbar() {
   
   return (
 
-    <nav>
+    <nav className="navbar">
 
-      <h2>Yacht Rental</h2>
+      <div className="navbar-container">
+        <h2 className="navbar-logo">Yacht Rental</h2>
+          <div className="nav-links">
+            <Link to="/" className="nav-link">
+              Home
+            </Link>
 
-      <div>
+            <Link to="/boats" className="nav-link">
+              Browse Boats
+            </Link>
 
-        <Link to="/">
-          Home
-        </Link>
+            <Link to="/bookings/me" className="nav-link">
+              My Bookings
+            </Link>
 
-        <Link to="/boats">
-          Browse Boats
-        </Link>
+            <Link to="/profile" className="nav-link">
+              Profile
+            </Link>
 
-        <Link to="/bookings/me">
-          My Bookings
-        </Link>
-
-        <Link to="/profile">
-          Profile
-        </Link>
-
-        <button onClick={handleLogout}>
-          Logout
-        </button>
+            <button onClick={handleLogout} className="nav-link signup-link">
+              Logout
+            </button>
+          </div>
 
       </div>
 

@@ -17,7 +17,7 @@ export const createBoat = async (formData: FormData, token: string): Promise<Boa
     const response = await axios.post(API_URL, formData, {
         headers: {
             'Content-Type': 'multipart/form-data',
-            Authorization: `Bearer${token}`
+            Authorization: `Bearer ${token}`
         },
     });
     return response.data;
@@ -27,7 +27,7 @@ export const updateBoat = async (id: number, formData: FormData, token: string):
     const response = await axios.patch(`${API_URL}/${id}`, formData, {
         headers: {
             'Content-Type': 'multipart/form-data',
-            Authorization: `Bearer${token}`
+            Authorization: `Bearer ${token}`
         },
     });
     return response.data;
@@ -36,7 +36,7 @@ export const updateBoat = async (id: number, formData: FormData, token: string):
 export const deleteBoat = async (id: number, token: string): Promise<void> => {
     await axios.delete(`${API_URL}/${id}`,{
         headers: {
-            Authorization: `Bearer${token}`
+            Authorization: `Bearer ${token}`
         }
     });
 };

@@ -53,6 +53,7 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({ boatId, onDateSelect,
         return bookedDates.includes(dateString);
     };
 
+    // FIXED: Now using isAvailable in render logic
     const isDateAvailable = (date: Date): boolean => {
         const dateString = date.toISOString().split('T')[0];
         return availableDates.includes(dateString);
@@ -66,7 +67,7 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({ boatId, onDateSelect,
     const isDateSelected = (date: Date): boolean => {
         if (!startDate) return false;
         if (startDate && !endDate) {
-            return date.toDateString() === startDate.toDateString();
+            return date.toISOString() === startDate.toISOString();
         }
         if (startDate && endDate) {
             return date >= startDate && date <= endDate;
@@ -86,10 +87,11 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({ boatId, onDateSelect,
             if (date < startDate) {
                 setStartDate(date);
                 setEndDate(startDate);
+                onDateSelect(date, startDate);
             } else {
                 setEndDate(date);
+                onDateSelect(startDate, date);
             }
-            onDateSelect(startDate, date);
         }
     };
 
@@ -111,14 +113,14 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({ boatId, onDateSelect,
 
         // Add empty cells for days before month starts
         for (let i = 0; i < startingDayOfWeek; i++) {
-            days.push(<div key={`empty-${i}`} className="h-12"></div>);
+            days.push(<div key={`empty-${i}`} className="calendar-day calendar-day--empty"></div>);
         }
 
         // Add days of the month
         for (let day = 1; day <= daysInMonth; day++) {
             const date = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), day);
             const isBooked = isDateBooked(date);
-            const isAvailable = isDateAvailable(date);
+            const isAvailable = isDateAvailable(date); // Now used!
             const isSelected = isDateSelected(date);
             const isInRange = isDateInRange(date);
             const isPast = date < today;
@@ -126,17 +128,21 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({ boatId, onDateSelect,
                              ((date >= startDate && date <= hoverDate) || 
                               (date <= startDate && date >= hoverDate));
             
-            let statusClass = '';
+            // FIXED: Now using isAvailable to determine available dates
+            let statusClass = 'calendar-day';
+            
             if (isBooked || isPast) {
-                statusClass = 'bg-gray-200 text-gray-400 cursor-not-allowed';
+                statusClass += ' calendar-day--booked';
             } else if (isSelected) {
-                statusClass = 'bg-blue-600 text-white';
+                statusClass += ' calendar-day--selected';
             } else if (isInRange) {
-                statusClass = 'bg-blue-200 text-blue-800';
+                statusClass += ' calendar-day--in-range';
             } else if (isHovered) {
-                statusClass = 'bg-blue-100 text-blue-800';
+                statusClass += ' calendar-day--hover';
+            } else if (isAvailable) {
+                statusClass += ' calendar-day--available';
             } else {
-                statusClass = 'hover:bg-blue-50 cursor-pointer';
+                statusClass += ' calendar-day--unavailable';
             }
 
             days.push(
@@ -145,9 +151,7 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({ boatId, onDateSelect,
                     onClick={() => !isBooked && !isPast && handleDateClick(date)}
                     onMouseEnter={() => !isBooked && !isPast && handleMouseEnter(date)}
                     onMouseLeave={handleMouseLeave}
-                    className={`h-12 flex items-center justify-center rounded-lg transition-colors ${statusClass} ${
-                        !isBooked && !isPast ? 'cursor-pointer' : ''
-                    }`}
+                    className={statusClass}
                 >
                     {day}
                 </div>
@@ -167,51 +171,48 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({ boatId, onDateSelect,
 
     const formatDate = (date: Date | null): string => {
         if (!date) return 'Not selected';
-        return date.toLocaleDateString('en-US', {
-            weekday: 'short',
-            year: 'numeric',
-            month: 'short',
-            day: 'numeric'
-        });
+        return date.toISOString()
     };
 
     return (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white rounded-xl shadow-2xl p-6 max-w-2xl w-full mx-4">
+        <div className="date-picker-overlay">
+            <div className="date-picker">
                 {/* Header */}
-                <div className="flex justify-between items-center mb-6">
-                    <h2 className="text-2xl font-bold text-gray-800">Select Dates</h2>
+                <div className="date-picker__header">
+                    <h2 className="date-picker__title">Select Dates</h2>
                     <button
                         onClick={onClose}
-                        className="text-gray-400 hover:text-gray-600 transition-colors"
+                        className="date-picker__close-btn"
+                        aria-label="Close date picker"
                     >
-                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="date-picker__icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                         </svg>
                     </button>
                 </div>
 
                 {/* Selected Dates Display */}
-                <div className="bg-blue-50 rounded-lg p-4 mb-6">
-                    <div className="grid grid-cols-2 gap-4">
+                <div className="date-picker__selected-dates">
+                    <div className="date-picker__dates-grid">
                         <div>
-                            <label className="text-sm text-gray-600">Start Date</label>
-                            <p className="font-semibold text-gray-800">{formatDate(startDate)}</p>
+                            <label className="date-picker__label">Start Date</label>
+                            <p className="date-picker__date-value">{formatDate(startDate)}</p>
                         </div>
                         <div>
-                            <label className="text-sm text-gray-600">End Date</label>
-                            <p className="font-semibold text-gray-800">{formatDate(endDate)}</p>
+                            <label className="date-picker__label">End Date</label>
+                            <p className="date-picker__date-value">{formatDate(endDate)}</p>
                         </div>
                     </div>
                 </div>
 
                 {/* Calendar Navigation */}
-                <div className="flex justify-between items-center mb-4">
+                <div className="calendar-nav">
                     <button
                         onClick={() => changeMonth(-1)}
-                        className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                        className="calendar-nav__btn"
+                        aria-label="Previous month"
                     >
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="calendar-nav__icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                         </svg>
                     </button>
@@ -220,9 +221,10 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({ boatId, onDateSelect,
                     </h3>
                     <button
                         onClick={() => changeMonth(1)}
-                        className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                        className="calendar-nav__btn"
+                        aria-label="Next month"
                     >
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="calendar-nav__icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                         </svg>
                     </button>
@@ -230,64 +232,62 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({ boatId, onDateSelect,
 
                 {/* Loading State */}
                 {loading && (
-                    <div className="flex justify-center py-12">
-                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                    <div className="calendar-loading">
+                        <div className="calendar-loading__spinner"></div>
                     </div>
                 )}
 
                 {/* Calendar Grid */}
                 {!loading && (
                     <>
-                        <div className="grid grid-cols-7 gap-2 mb-2">
+                        <div className="calendar-weekdays">
                             {['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'].map(day => (
-                                <div key={day} className="text-center text-sm font-semibold text-gray-600">
+                                <div key={day} className="calendar-weekdays__day">
                                     {day}
                                 </div>
                             ))}
                         </div>
-                        <div className="grid grid-cols-7 gap-2">
+                        <div className="calendar-grid">
                             {renderCalendar()}
                         </div>
                     </>
                 )}
 
                 {/* Legend */}
-                <div className="mt-6 pt-4 border-t border-gray-200">
-                    <div className="flex justify-center space-x-6 text-sm">
-                        <div className="flex items-center">
-                            <div className="w-4 h-4 bg-blue-600 rounded mr-2"></div>
-                            <span>Selected</span>
-                        </div>
-                        <div className="flex items-center">
-                            <div className="w-4 h-4 bg-blue-200 rounded mr-2"></div>
-                            <span>In Range</span>
-                        </div>
-                        <div className="flex items-center">
-                            <div className="w-4 h-4 bg-gray-200 rounded mr-2"></div>
-                            <span>Booked</span>
-                        </div>
-                        <div className="flex items-center">
-                            <div className="w-4 h-4 bg-white border border-gray-300 rounded mr-2"></div>
-                            <span>Available</span>
-                        </div>
+                <div className="calendar-legend">
+                    <div className="calendar-legend__item">
+                        <div className="calendar-legend__color calendar-legend__color--selected"></div>
+                        <span>Selected</span>
+                    </div>
+                    <div className="calendar-legend__item">
+                        <div className="calendar-legend__color calendar-legend__color--in-range"></div>
+                        <span>In Range</span>
+                    </div>
+                    <div className="calendar-legend__item">
+                        <div className="calendar-legend__color calendar-legend__color--booked"></div>
+                        <span>Booked</span>
+                    </div>
+                    <div className="calendar-legend__item">
+                        <div className="calendar-legend__color calendar-legend__color--available"></div>
+                        <span>Available</span>
                     </div>
                 </div>
 
                 {/* Actions */}
-                <div className="mt-6 flex space-x-3">
+                <div className="date-picker__actions">
                     <button
                         onClick={() => {
                             setStartDate(null);
                             setEndDate(null);
                             onDateSelect(null, null);
                         }}
-                        className="flex-1 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                        className="date-picker__btn date-picker__btn--clear"
                     >
                         Clear
                     </button>
                     <button
                         onClick={onClose}
-                        className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                        className="date-picker__btn date-picker__btn--done"
                     >
                         Done
                     </button>

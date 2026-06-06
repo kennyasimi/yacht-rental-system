@@ -40,11 +40,11 @@ export const cancelBooking = async(bookingId: number, token: string) => {
     }
 
 export const getUserBookings = async(token: string)  => {
-        const response = await axios.get(`${API_URL}/all`,{
-            headers: {Authorization: `Bearer ${token}`}
-        });
-        return response.data;
-    }
+    const response = await axios.get(`${API_URL}/all`,{
+        headers: {Authorization: `Bearer ${token}`}
+    });
+    return response.data;
+};
 
 export const getAllBookings = async(token: string) => {
     const response = await axios.get( `${API_URL}/admin/all`,{
