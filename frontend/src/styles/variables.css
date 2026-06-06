@@ -1,0 +1,93 @@
+/* ============================================
+   CSS VARIABLES - DESIGN SYSTEM
+   ============================================ */
+
+:root {
+    /* ===== COLOR VARIABLES ===== */
+    
+    /* Primary Colors */
+    --primary-blue: #2563eb;
+    --primary-blue-dark: #1d4ed8;
+    --primary-blue-light: #3b82f6;
+    
+    /* Secondary Colors */
+    --secondary-gray: #6b7280;
+    --secondary-gray-dark: #4b5563;
+    --secondary-gray-light: #9ca3af;
+    
+    /* Semantic Colors */
+    --success-green: #10b981;
+    --error-red: #ef4444;
+    --warning-yellow: #f59e0b;
+    --info-blue: #3b82f6;
+    
+    /* Background Colors */
+    --bg-white: #ffffff;
+    --bg-gray: #f3f4f6;
+    --bg-gray-dark: #e5e7eb;
+    --bg-primary-light: #eff6ff;
+    
+    /* Text Colors */
+    --text-primary: #111827;
+    --text-secondary: #4b5563;
+    --text-light: #6b7280;
+    --text-white: #ffffff;
+    
+    /* Border Colors */
+    --border-light: #e5e7eb;
+    --border-medium: #d1d5db;
+    --border-dark: #9ca3af;
+    
+    /* ===== SPACING VARIABLES ===== */
+    --spacing-xs: 0.25rem;    /* 4px */
+    --spacing-sm: 0.5rem;     /* 8px */
+    --spacing-md: 1rem;       /* 16px */
+    --spacing-lg: 1.5rem;     /* 24px */
+    --spacing-xl: 2rem;       /* 32px */
+    --spacing-2xl: 3rem;      /* 48px */
+    --spacing-3xl: 4rem;      /* 64px */
+    
+    /* ===== BORDER RADIUS VARIABLES ===== */
+    --radius-sm: 0.25rem;     /* 4px */
+    --radius-md: 0.5rem;      /* 8px */
+    --radius-lg: 0.75rem;     /* 12px */
+    --radius-xl: 1rem;        /* 16px */
+    --radius-full: 9999px;
+    
+    /* ===== SHADOW VARIABLES ===== */
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    
+    /* ===== TRANSITION VARIABLES ===== */
+    --transition-fast: 150ms ease;
+    --transition-normal: 250ms ease;
+    --transition-slow: 350ms ease;
+    
+    /* ===== CONTAINER WIDTHS ===== */
+    --container-sm: 640px;
+    --container-md: 768px;
+    --container-lg: 1024px;
+    --container-xl: 1280px;
+    
+    /* ===== Z-INDEX LAYERS ===== */
+    --z-dropdown: 10;
+    --z-modal: 50;
+    --z-tooltip: 20;
+    --z-header: 30;
+}
+
+/* ===== DARK MODE SUPPORT (Optional) ===== */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg-white: #1f2937;
+        --bg-gray: #111827;
+        --bg-gray-dark: #374151;
+        --text-primary: #f9fafb;
+        --text-secondary: #d1d5db;
+        --text-light: #9ca3af;
+        --border-light: #374151;
+        --border-medium: #4b5563;
+    }
+}
