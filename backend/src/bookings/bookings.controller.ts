@@ -11,6 +11,21 @@ export class BookingsController {
     constructor (private bookingsService: BookingsService) {}
 
     @UseGuards(JwtAuthGuard)
+    @Get('all')
+    async getUsersBookings(@Request() req: any){
+            const id = parseInt(req.user.userId);
+            return this.bookingsService.getUsersBookings(id)
+        }
+
+    @Roles(UserRole.ADMIN)
+    @UseGuards(JwtAuthGuard, RolesGuard)
+    @Get('admin/all')
+    getAllBookings(
+        ) {
+        return this.bookingsService.getAllBookings();
+    }
+
+    @UseGuards(JwtAuthGuard)
     @Post('create')
     createBooking(
         @Request() req,
@@ -28,7 +43,7 @@ export class BookingsController {
         @Param('id', ParseIntPipe) bookingId: number,
         @Request() req: any,
         ) {
-        const userId = req.user.id;
+        const userId = req.user.userId;
         return this.bookingsService.cancelBooking(bookingId, userId);
     }
 
@@ -38,26 +53,8 @@ export class BookingsController {
         @Param('id', ParseIntPipe) bookingId: number,
         @Request() req: any,
         ){
-            const userId = req.user.id;
+            const userId = parseInt(req.user.userId);
             return this.bookingsService.getBookingById(userId, bookingId)
-    }
-
-    @UseGuards(JwtAuthGuard)
-    @Get('all')
-    getUsersBookings(
-        @Param('id', ParseIntPipe)
-        @Request() req: any,
-        ){
-            const userId = req.user.id;
-            return this.bookingsService.getUsersBookings(userId)
-    }
-
-    @Roles(UserRole.ADMIN)
-    @UseGuards(JwtAuthGuard, RolesGuard)
-    @Get('admin/all')
-    getAllBookings(
-        ) {
-        return this.bookingsService.getAllBookings();
     }
 
      @Get('boat/:boatId/availability')

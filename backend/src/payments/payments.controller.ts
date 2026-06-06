@@ -16,9 +16,8 @@ export class PaymentsController {
         @Body() dto: PaymentDto,
     ) {
     return this.paymentsService.processPayment(
-        dto.booking_id,
         req.user.userId,
-        dto.payment_method,
+        dto,
     )}
 
     @UseGuards(JwtAuthGuard)

@@ -1,4 +1,16 @@
-import { Controller, Patch, Param, Body,ParseIntPipe, UseGuards, Get, Post, Delete, UseInterceptors, UploadedFile, Res, HttpStatus, UploadedFiles } from '@nestjs/common';
+import { Controller,
+    Patch,
+    Param,
+    Body,
+    ParseIntPipe,
+    UseGuards, 
+    Get, 
+    Post, 
+    Delete, 
+    UseInterceptors, 
+    UploadedFile, 
+    UsePipes, 
+    ValidationPipe } from '@nestjs/common';
 import { boatsService } from './boats.service';
 import { UpdateBoatDto } from './dto/updateboat.dto';
 import { CreateBoatDto } from './dto/createboat.dto';
@@ -6,8 +18,6 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { RolesGuard } from '../auth/roles.guard';
 import { Roles } from '../auth/roles.decorator';
 import { UserRole } from '../auth/auth.enums';
-import * as fs from 'fs';
-import * as path from 'path';
 import { FileInterceptor } from '@nestjs/platform-express';
 
 
@@ -24,7 +34,6 @@ export class BoatsController {
 
     //get all boats
     @Get()
-    //@UseGuards(JwtAuthGuard)
     getAllBoats(){
         return this.boatsService.getAllBoats()
     }
@@ -33,6 +42,7 @@ export class BoatsController {
     @UseGuards(JwtAuthGuard, RolesGuard)
     @Roles(UserRole.ADMIN)
     @Post()
+    @UsePipes(new ValidationPipe({ transform: true }))
     @UseInterceptors(FileInterceptor('image'))
     async addBoat( 
         @Body() createBoatDto: CreateBoatDto,
@@ -46,6 +56,7 @@ export class BoatsController {
     @UseGuards(JwtAuthGuard, RolesGuard)
     @Roles(UserRole.ADMIN)
     @Patch(':id') 
+    @UsePipes(new ValidationPipe({ transform: true }))
     @UseInterceptors(FileInterceptor('image'))
     async updateBoat(
             @Param('id', ParseIntPipe) id: number, //  Captures the ID from the URL path

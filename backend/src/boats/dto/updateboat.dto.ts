@@ -1,5 +1,5 @@
 import { IsString, IsOptional, IsInt, IsPositive } from "class-validator";
-
+import { Type } from "class-transformer";
 export class UpdateBoatDto {
     @IsOptional()
     @IsString()
@@ -9,6 +9,7 @@ export class UpdateBoatDto {
     @IsString()
     new_boat_type!: string;
 
+    @Type(() => Number)
     @IsOptional()
     @IsInt()
     @IsPositive()

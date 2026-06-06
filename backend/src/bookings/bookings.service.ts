@@ -36,10 +36,25 @@ export class BookingsService {
     }
 
     async getUsersBookings(userId: number) {
-        return this.prisma.bookings.findMany({
-            where: {user_id: userId
-            }
-        })
+        const bookings = await this.prisma.bookings.findMany({
+            where: {
+                users: {
+                    user_id: userId
+                }
+            },
+                include: {
+                    boats: {
+                        select: {
+                            boat_id: true,
+                            boat_name: true,
+                            boat_type: true,
+                            price_per_day: true,
+                        }
+                    }
+                 }
+            });
+        console.log('Found bookings:', bookings.length);
+        return bookings;  
     }
 
     async getAllBookings(){
@@ -48,7 +63,7 @@ export class BookingsService {
 
     async createBooking(userId: number, dto: CreateBookingDto) {
         const{ boat_id, start_date, end_date } = dto;
-        if(start_date >= end_date){
+        if(new Date(start_date) >= new Date(end_date)){
             throw new BadRequestException('The start date must be earlier than the end date');
         }
 
@@ -72,15 +87,18 @@ export class BookingsService {
             });
         if (conflictingBooking) {
             throw new ConflictException('Boat already booked for selected time slot')
-        }   
+        }
+        
+        const bookingDate = new Date()
+        //create a current date variable
         return this.prisma.bookings.create({
             data: {
             user_id: userId,
             boat_id: dto.boat_id,
-            start_date: new Date(dto.start_date),
-            end_date: new Date(dto.end_date),
+            start_date: new Date(dto.start_date).toISOString(),
+            end_date: new Date(dto.end_date).toISOString(),
             status: BookingStatus.PENDING,
-            created_at: new Date(),
+            created_at: bookingDate.toISOString() ,
             },
         });
     }

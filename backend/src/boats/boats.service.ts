@@ -87,6 +87,7 @@ export class boatsService {
             },
 
         });
+        // image to permanent location
         if (imageFile && imageFile.path) {
             const oldPath = imageFile.path;
             const ext = path.extname(imageFile.originalname);
@@ -115,25 +116,30 @@ export class boatsService {
                 }
         if (updateBoatDto.new_boat_name) boatUpdateData.boat_name = updateBoatDto.new_boat_name;
         if (updateBoatDto.new_boat_type !== undefined) boatUpdateData.boat_type = updateBoatDto.new_boat_type;
-        if (updateBoatDto.new_price_per_day !== undefined) boatUpdateData.price_per_day = updateBoatDto.new_price_per_day;
+        if (updateBoatDto.new_price_per_day !== undefined) boatUpdateData.price_per_day = Number(updateBoatDto.new_price_per_day);
 
         const updatedBoat = await this.prisma.boats.update({
             where: { boat_id: id },
             data: boatUpdateData
         })
 
-        if (imageFile) {
-            // Delete old image if it exists
+        if (imageFile && imageFile.path) {
             this.deleteBoatImage(id);
-            
-            // Save new image with correct naming
             const ext = path.extname(imageFile.originalname);
             const newPath = path.join('./uploads/boats', `boat-${id}${ext}`);
             
             if (fs.existsSync(imageFile.path)) {
                 fs.renameSync(imageFile.path, newPath);
             }
-    }
+        }
+        console.log('Boat updated successfully')
+
+        return {
+            ...updatedBoat,
+            imageUrl: this.getImageUrl(id)
+            
+        };
+
     }
 
     async deleteBoat(id: number){
@@ -141,12 +147,12 @@ export class boatsService {
         const boat = await this.prisma.boats.findUnique({ where: { boat_id: id } });
         if (!boat) {
             throw new NotFoundException(`Boat with ID ${id} not found`);
-                }
+            }
         this.deleteBoatImage(id);
 
         return this.prisma.boats.delete({
             where: {boat_id: id}
-        })
+        });
 
     }
 }
