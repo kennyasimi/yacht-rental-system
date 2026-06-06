@@ -16,8 +16,8 @@ export interface Booking {
 
 export interface CreateBookingDto {
     boat_id: number;
-    start_date: string;
-    end_date: string;
+    start_date: Date;
+    end_date: Date;
 }
 
 export interface BoatAvailability {
