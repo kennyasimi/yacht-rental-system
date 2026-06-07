@@ -4,6 +4,7 @@ import { ReviewsController } from './reviews.controller';
 
 @Module({
   providers: [reviewsService],
-  controllers: [ReviewsController]
+  controllers: [ReviewsController],
+  exports: [reviewsService],
 })
 export class ReviewsModule {}
