@@ -171,7 +171,7 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({ boatId, onDateSelect,
 
     const formatDate = (date: Date | null): string => {
         if (!date) return 'Not selected';
-        return date.toISOString()
+        return date.toString()
     };
 
     return (
