@@ -1,7 +1,10 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { getBoatById } from '../../services/boatsservice';
-import { type Boat } from '../../types/boat';
+import { type Boat, type Review } from '../../types/boat';
+import RatingStars from '../../components/RatingStars';
+import { getBoatReviews } from '../../services/reviewsservice';
+import ReviewItem from '../../components/ReviewItem';
 
 function BoatDetailsPage() {
     const { id } = useParams<{ id: string }>();
@@ -10,6 +13,29 @@ function BoatDetailsPage() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const [imageError, setImageError] = useState(false);
+    const [reviews, setReviews] = useState<Review[]>([]);
+    const [loadingReviews, setLoadingReviews]  = useState(false);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
+
+    useEffect(() => {
+        const fetchReviews = async () => {
+            if (!id) return;
+            
+            setLoadingReviews(true);
+            try {
+                const data = await getBoatReviews(parseInt(id), currentPage, 5);
+                setReviews(data.reviews);
+                setTotalPages(data.totalPages);
+            } catch (error) {
+                console.error('Failed to load reviews:', error);
+            } finally {
+                setLoadingReviews(false);
+            }
+        };
+
+        fetchReviews();
+    }, [id, currentPage]);
 
     useEffect(() => {
         const fetchBoatDetails = async () => {
@@ -34,7 +60,12 @@ function BoatDetailsPage() {
         navigate(`/book/${boat?.boat_id}`);
     };
 
- if (loading) {
+    const handlePageChange = (page: number) => {
+        setCurrentPage(page);
+        window.scrollTo({ top: 0, behavior: 'smooth'})
+    }
+
+    if (loading) {
     return (
         <div className="loading-container">
             <div className="spinner"></div>
@@ -67,9 +98,9 @@ return (
                 <div className="details-grid">
                     {/* Image Section */}
                     <div className="details-image-container">
-                        {boat.imageUrl && !imageError ? (
+                        {boat.imageURl && !imageError ? (
                             <img
-                                src={`http://localhost:3000${boat.imageUrl}`}
+                                src={`http://localhost:3000${boat.imageURl}`}
                                 alt={boat.boat_name}
                                 className="details-image"
                                 onError={() => setImageError(true)}
@@ -84,6 +115,15 @@ return (
                         <h1 className="details-title">
                             {boat.boat_name}
                         </h1>
+
+                        <div className="details-rating-section">
+                            <RatingStars 
+                                rating={boat.averageRating} 
+                                size="large" 
+                                showValue={true}
+                                totalReviews={boat.totalReviews}
+                            />
+                        </div>
 
                         <div className="details-type-badge">
                             <span className="badge">
@@ -135,6 +175,58 @@ return (
                     </div>
                 </div>
             </div>
+            {/* Reviews Section */}
+                <div className="reviews-section">
+                    <div className="reviews-header">
+                        <h2 className="reviews-title">
+                            Customer Reviews
+                            {boat.totalReviews > 0 && (
+                                <span className="reviews-count">({boat.totalReviews})</span>
+                            )}
+                        </h2>
+                    </div>
+
+                    {loadingReviews ? (
+                        <div className="reviews-loading">
+                            <div className="spinner-small"></div>
+                        </div>
+                    ) : reviews.length === 0 ? (
+                        <div className="no-reviews">
+                            <p>No reviews yet. Be the first to review this boat!</p>
+                        </div>
+                    ) : (
+                        <>
+                            <div className="reviews-list">
+                                {reviews.map((review) => (
+                                    <ReviewItem key={review.review_id} review={review} />
+                                ))}
+                            </div>
+
+                            {/* Pagination */}
+                            {totalPages > 1 && (
+                                <div className="pagination">
+                                    <button
+                                        onClick={() => handlePageChange(currentPage - 1)}
+                                        disabled={currentPage === 1}
+                                        className="pagination-btn"
+                                    >
+                                        Previous
+                                    </button>
+                                    <span className="pagination-info">
+                                        Page {currentPage} of {totalPages}
+                                    </span>
+                                    <button
+                                        onClick={() => handlePageChange(currentPage + 1)}
+                                        disabled={currentPage === totalPages}
+                                        className="pagination-btn"
+                                    >
+                                        Next
+                                    </button>
+                                </div>
+                            )}
+                        </>
+                    )}
+                </div>
         </div>
     </div>
 );

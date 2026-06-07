@@ -8,11 +8,13 @@ function AllUsersPage() {
     const [error, setError] = useState('');
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedRole, setSelectedRole] = useState('');
+    const token = localStorage.getItem('token')
+
 
     useEffect(() => {
         const fetchUsers = async () => {
             try {
-                const data = await getAllUsers();
+                const data = await getAllUsers(token || '');
                 setUsers(data);
             } catch (error) {
                 setError('Failed to load users');
