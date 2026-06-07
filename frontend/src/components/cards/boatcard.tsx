@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { type Boat } from '../../types/boat';
+import RatingStars from '../RatingStars';
 
 interface BoatCardProps {
     boat: Boat;
@@ -45,7 +46,15 @@ const BoatCard: React.FC<BoatCardProps> = ({ boat }) => {
             <h3 className="boat-card-title">
                 {boat.boat_name}
             </h3>
-            
+            {/* rating section*/}
+            <div className="boat-card-rating">
+                    <RatingStars 
+                        rating={boat.averageRating} 
+                        size="small" 
+                        showValue={true}
+                        totalReviews={boat.totalReviews}
+                    />
+                </div>
             <div className="boat-card-info">
                 <span className="boat-card-type">{boat.boat_type}</span>
             </div>

@@ -140,9 +140,9 @@ return (
                     {/* Boat Info Card - Left Side */}
                     <div className="booking-boat-card">
                         <div className="booking-boat-image-container">
-                            {boat.imageUrl && !imageError ? (
+                            {boat.imageURl && !imageError ? (
                                 <img
-                                    src={`http://localhost:3000${boat.imageUrl}`}
+                                    src={`http://localhost:3000${boat.imageURl}`}
                                     alt={boat.boat_name}
                                     className="booking-boat-image"
                                     onError={() => setImageError(true)}

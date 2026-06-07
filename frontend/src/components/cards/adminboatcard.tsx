@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { type Boat } from '../../types/boat';
 import { updateBoat, deleteBoat } from '../../services/boatsservice';
+import RatingStars from '../RatingStars';
 
 interface AdminBoatCardProps {
     boat: Boat;
@@ -197,6 +198,15 @@ return (
         
         {/* Content */}
         <div className="admin-card-content">
+            <div className="admin-card-rating">
+                <RatingStars 
+                    rating={boat.averageRating} 
+                    size="small" 
+                    showValue={true}
+                    totalReviews={boat.totalReviews}
+                />
+            </div>
+            
             <h3 className="admin-card-title">{boat.boat_name}</h3>
             <p className="admin-card-type">Type: {boat.boat_type}</p>
             <p className="admin-card-capacity">Capacity: {boat.capacity} persons</p>
