@@ -10,12 +10,13 @@ import { NotFoundException } from '@nestjs/common';
 import * as fs from 'fs';
 import * as path from 'path';
 import 'multer';
+import { reviewsService } from '../reviews/reviews.service';
 
 @Injectable()
 export class boatsService {
     constructor (
-        private prisma: PrismaService
-        
+        private prisma: PrismaService,
+        private reviewsService : reviewsService
     ){}
 
     //method to get image path for a boat
@@ -58,19 +59,24 @@ export class boatsService {
         const boat = await this.prisma.boats.findUnique({
             where: { boat_id: boatId },
         });
-
+        const ratingData = await this.reviewsService.getBoatAverageRating(boatId)
         return {
             ...boat,
-            imageURl: this.getImageUrl(boatId)
+            imageURl: this.getImageUrl(boatId),
+            averageRating : ratingData.averageRating,
+            totalReviews: ratingData.totalReviews
         }
     }
 
     async getAllBoats() {
         const boats = await this.prisma.boats.findMany()
-        
+        const boatIds = boats.map(boat => boat.boat_id);
+        const ratingsMap = await this.reviewsService.getMultipleBoatsAverageRating(boatIds);
         return boats.map(boat => ({
             ...boat,
-            imageUrl: this.getImageUrl(boat.boat_id)
+            imageUrl: this.getImageUrl(boat.boat_id),
+            averageRating: ratingsMap.get(boat.boat_id)?.averageRating ?? null,
+            totalReviews: ratingsMap.get(boat.boat_id)?.totalReviews ?? 0,
         }));
     }
     

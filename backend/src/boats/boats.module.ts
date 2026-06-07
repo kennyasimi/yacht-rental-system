@@ -5,6 +5,7 @@ import { MulterModule } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
 import * as fs from 'fs';
+import { ReviewsModule } from 'src/reviews/reviews.module';
 
 const uploadDir = './uploads/boats';
 const tempDir = './uploads/temp'
@@ -17,7 +18,7 @@ if (!fs.existsSync(tempDir)) {
 }
 
 @Module({
-  imports: [
+  imports: [ReviewsModule,
     MulterModule.register({
       storage: diskStorage({
         // Save files to temp folder first
