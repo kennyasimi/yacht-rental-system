@@ -1,6 +1,7 @@
 import { Injectable, ConflictException, BadRequestException, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateBookingDto } from './dto/createbooking.dto';
+import { Cron } from '@nestjs/schedule';
 
 export enum BookingStatus {
     PENDING = 'PENDING',
