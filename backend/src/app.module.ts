@@ -10,9 +10,10 @@ import { BookingsModule } from './bookings/bookings.module';
 import { PaymentsModule } from './payments/payments.module';
 import { ReviewsModule } from './reviews/reviews.module';
 import { ConfigModule } from '@nestjs/config';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
-  imports: [UsersModule, AuthModule, PrismaModule, BoatsModule, BookingsModule, PaymentsModule, ReviewsModule, 
+  imports: [UsersModule, AuthModule, PrismaModule, BoatsModule, BookingsModule, PaymentsModule, ReviewsModule, ScheduleModule.forRoot(),
     ConfigModule.forRoot({
       isGlobal: true,  // make ConfigService available everywhere
       envFilePath: '.env',  // Explicitly specify .env file path
